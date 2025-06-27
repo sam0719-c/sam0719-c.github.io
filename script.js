@@ -1,12 +1,11 @@
-import { Chart } from "@/components/ui/chart"
 // 等待DOM載入完成
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 應用程序開始初始化...")
 
   // 註冊Chart.js的數據標籤插件
   const ChartDataLabels = window.ChartDataLabels
-  if (typeof Chart !== "undefined" && typeof ChartDataLabels !== "undefined") {
-    Chart.register(ChartDataLabels)
+  if (typeof window.Chart !== "undefined" && typeof ChartDataLabels !== "undefined") {
+    window.Chart.register(ChartDataLabels)
     console.log("✅ Chart.js 和 DataLabels 插件已註冊")
   } else {
     console.error("❌ Chart.js 或 ChartDataLabels 未載入")
@@ -86,25 +85,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== 獲取當前頁面的基礎URL =====
   function getBaseUrl() {
-    // 獲取當前頁面的完整路徑
-    const currentPath = window.location.pathname
-    const pathParts = currentPath.split("/")
+    // 獲取當前頁面的URL信息
+    const location = window.location
+    const protocol = location.protocol
+    const hostname = location.hostname
+    const pathname = location.pathname
 
-    // 如果是 GitHub Pages，通常格式為 /repository-name/
-    // 我們需要保留到倒數第二個部分
-    if (pathParts.length > 2 && pathParts[pathParts.length - 1] === "") {
-      // 路徑以 / 結尾，移除最後的空字符串
-      pathParts.pop()
+    // 檢查是否在GitHub Pages上
+    const isGitHubPages = hostname.includes('github.io')
+    console.log("🌐 當前環境:", isGitHubPages ? "GitHub Pages" : "本地或其他環境")
+    
+    // 處理路徑
+    let basePath = ''
+    
+    if (isGitHubPages) {
+      // GitHub Pages格式: username.github.io/repository-name/
+      const pathParts = pathname.split('/')
+      
+      // 移除空字符串和文件名
+      const filteredParts = pathParts.filter(part => part !== '' && !part.includes('.'))
+      
+      // 構建基礎路徑，確保包含倉庫名稱
+      if (filteredParts.length > 0) {
+        basePath = '/' + filteredParts.join('/') + '/'
+      } else {
+        basePath = '/'
+      }
+    } else {
+      // 本地或其他環境
+      const pathParts = pathname.split('/')
+      
+      // 移除文件名（如 index.html）
+      if (pathParts.length > 0 && pathParts[pathParts.length - 1].includes('.')) {
+        pathParts.pop()
+      }
+      
+      // 如果路徑以 / 結尾，移除最後的空字符串
+      if (pathParts.length > 0 && pathParts[pathParts.length - 1] === '') {
+        pathParts.pop()
+      }
+      
+      basePath = pathParts.join('/') + '/'
     }
-
-    // 移除文件名（如 index.html）
-    if (pathParts[pathParts.length - 1].includes(".")) {
-      pathParts.pop()
-    }
-
-    const basePath = pathParts.join("/") + "/"
-    console.log("🔗 檢測到的基礎路徑:", basePath)
-    return basePath
+    
+    // 構建完整的基礎URL
+    const baseUrl = protocol + '//' + hostname + basePath
+    console.log("🔗 檢測到的基礎路徑:", baseUrl)
+    return baseUrl
   }
 
   // ===== 從JSON文件載入CSV文件列表 =====
@@ -130,10 +157,38 @@ document.addEventListener("DOMContentLoaded", () => {
       PREDEFINED_CSV_FILES = data.files || []
 
       // 修正文件路徑，確保使用正確的基礎URL
-      PREDEFINED_CSV_FILES = PREDEFINED_CSV_FILES.map((file) => ({
-        ...file,
-        path: file.path.startsWith("./") ? baseUrl + file.path.substring(2) : baseUrl + file.path,
-      }))
+      PREDEFINED_CSV_FILES = PREDEFINED_CSV_FILES.map((file) => {
+        // 處理不同格式的路徑
+        let adjustedPath = file.path
+        
+        // 移除開頭的點和斜線 (./) 如果存在
+        if (adjustedPath.startsWith('./')) {
+          adjustedPath = adjustedPath.substring(2)
+        }
+        
+        // 確保路徑不以斜線開頭，避免重複斜線
+        if (adjustedPath.startsWith('/')) {
+          adjustedPath = adjustedPath.substring(1)
+        }
+        
+        // 構建完整路徑 - 對於本地測試，使用相對路徑可能更好
+        let fullPath;
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+          // 本地環境使用相對路徑
+          fullPath = adjustedPath;
+        } else {
+          // GitHub Pages或其他環境使用完整URL
+          fullPath = baseUrl + adjustedPath;
+        }
+        
+        console.log(`🔄 調整路徑: ${file.path} -> ${fullPath}`)
+        
+        return {
+          ...file,
+          path: fullPath,
+          originalPath: file.path // 保留原始路徑以便調試
+        }
+      })
 
       console.log("✅ 已從JSON載入CSV文件列表:", PREDEFINED_CSV_FILES)
 
@@ -605,10 +660,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const validStockValues = stockValues || Array(stockNames.length).fill(0)
     const colors = generateColors(stockNames.length)
 
-    Chart.defaults.animation.duration = 800
-    Chart.defaults.animation.easing = "easeOutQuart"
+    if (window.Chart) {
+      window.Chart.defaults.animation.duration = 800
+      window.Chart.defaults.animation.easing = "easeOutQuart"
+    }
 
-    chart = new Chart(chartCanvas, {
+    chart = new window.Chart(chartCanvas, {
       type: "bar",
       data: {
         labels: stockNames.map((name) => name.replace(/\[(.*?)\](?:$$.*?$$)?/g, "$1")),
@@ -1068,4 +1125,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // 啟動應用程序
   initializeApp()
+
+  // 添加調試信息
+  console.log('🔍 調試信息:')
+  console.log('- 當前URL:', window.location.href)
+  console.log('- 主機名:', window.location.hostname)
+  console.log('- 路徑名:', window.location.pathname)
+  console.log('- 是否為本地環境:', window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
 })
