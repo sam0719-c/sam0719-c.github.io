@@ -1,0 +1,107 @@
+{
+  "lastUpdated": "2025-06-27T10:30:01.369941Z",
+  "files": [
+    {
+      "name": "Iteration_2023_11_BAM_ENB_TRI.csv",
+      "path": "./data/Iteration_2023_11_BAM_ENB_TRI.csv",
+      "size": 8467,
+      "lastModified": "2025-04-13T18:49:40Z"
+    },
+    {
+      "name": "Iteration_2023_11_RY_TD_CNR.csv",
+      "path": "./data/Iteration_2023_11_RY_TD_CNR.csv",
+      "size": 3242,
+      "lastModified": "2025-04-13T18:47:42Z"
+    },
+    {
+      "name": "Iteration_2023_11_TD_CNR_ENB.csv",
+      "path": "./data/Iteration_2023_11_TD_CNR_ENB.csv",
+      "size": 5968,
+      "lastModified": "2025-04-13T18:49:06Z"
+    },
+    {
+      "name": "Iteration_2023_11_TRI_CSU_IFC_AEM_CNR.csv",
+      "path": "./data/Iteration_2023_11_TRI_CSU_IFC_AEM_CNR.csv",
+      "size": 17859,
+      "lastModified": "2025-04-15T21:17:09.663584Z"
+    },
+    {
+      "name": "Iteration_2023_11_TRI_CSU_IFC_AEM_ENB.csv",
+      "path": "./data/Iteration_2023_11_TRI_CSU_IFC_AEM_ENB.csv",
+      "size": 18752,
+      "lastModified": "2025-04-15T21:14:13.252655Z"
+    },
+    {
+      "name": "Iteration_2024_11_6stock.csv",
+      "path": "./data/Iteration_2024_11_6stock.csv",
+      "size": 147716,
+      "lastModified": "2025-04-28T21:22:42.697935Z"
+    },
+    {
+      "name": "Iteration_train_2023_11(2023 Q1)_16.csv",
+      "path": "./data/Iteration_train_2023_11(2023 Q1)_16.csv",
+      "size": 3548,
+      "lastModified": "2025-04-13T19:07:33Z"
+    },
+    {
+      "name": "Iteration_train_2023_11(2023 Q1)_ENB_AEM_TRI_CSU.csv",
+      "path": "./data/Iteration_train_2023_11(2023 Q1)_ENB_AEM_TRI_CSU.csv",
+      "size": 7553,
+      "lastModified": "2025-04-14T14:20:29.920632Z"
+    },
+    {
+      "name": "Iteration_train_2023_11_ENB_CSU_IFC_AEM.csv",
+      "path": "./data/Iteration_train_2023_11_ENB_CSU_IFC_AEM.csv",
+      "size": 5134,
+      "lastModified": "2025-04-13T20:19:30.372026Z"
+    },
+    {
+      "name": "Iteration_train_2023_11_ENB_TRI_IFC_AEM.csv",
+      "path": "./data/Iteration_train_2023_11_ENB_TRI_IFC_AEM.csv",
+      "size": 11119,
+      "lastModified": "2025-04-15T19:58:19.984540Z"
+    },
+    {
+      "name": "Iteration_train_2023_11_RY_TD_CNR_ENB.csv",
+      "path": "./data/Iteration_train_2023_11_RY_TD_CNR_ENB.csv",
+      "size": 6227,
+      "lastModified": "2025-04-13T19:00:17Z"
+    },
+    {
+      "name": "Iteration_train_2024_11(2024 Q1)_AAPL_MSFT_DIS.csv",
+      "path": "./data/Iteration_train_2024_11(2024 Q1)_AAPL_MSFT_DIS.csv",
+      "size": 3348,
+      "lastModified": "2025-04-20T17:55:09.853311Z"
+    },
+    {
+      "name": "Iteration_train_2024_11(2024 Q1)_AAPL_MSFT_UNH_DIS.csv",
+      "path": "./data/Iteration_train_2024_11(2024 Q1)_AAPL_MSFT_UNH_DIS.csv",
+      "size": 4880,
+      "lastModified": "2025-04-20T18:27:48.554524Z"
+    },
+    {
+      "name": "Iteration_train_2024_11(2024 Q1)_AAPL_UNH_DIS.csv",
+      "path": "./data/Iteration_train_2024_11(2024 Q1)_AAPL_UNH_DIS.csv",
+      "size": 2820,
+      "lastModified": "2025-04-20T17:48:12.106985Z"
+    },
+    {
+      "name": "Iteration_train_2024_11(2024 Q1)_UNH_PG_DIS.csv",
+      "path": "./data/Iteration_train_2024_11(2024 Q1)_UNH_PG_DIS.csv",
+      "size": 1507,
+      "lastModified": "2025-04-20T17:46:14.247910Z"
+    },
+    {
+      "name": "Iteration_train_2024_11_AAPL_MSFT_UNH_PG_DIS.csv",
+      "path": "./data/Iteration_train_2024_11_AAPL_MSFT_UNH_PG_DIS.csv",
+      "size": 27540,
+      "lastModified": "2025-04-16T17:33:00.131640Z"
+    },
+    {
+      "name": "results_train_2023_11_TRI_CSU_IFC_AEM.csv",
+      "path": "./data/results_train_2023_11_TRI_CSU_IFC_AEM.csv",
+      "size": 4297,
+      "lastModified": "2025-04-15T20:01:19.221036Z"
+    }
+  ]
+}

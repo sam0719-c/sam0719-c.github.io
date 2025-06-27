@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>股票視覺化工具</title>
+    <!-- 版本更新：2025-01-27 -->
+    <link rel="stylesheet" href="styles.css?v=26">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>股票視覺化工具</h1>
+        
+        <!-- 狀態顯示區域 -->
+        <div id="status-message" class="status-message" style="display: none;"></div>
+        
+        <div class="csv-selector">
+            <label for="csvSelector">選擇CSV檔案：</label>
+            <select id="csvSelector">
+                <option value="">-- 請選擇CSV檔案 --</option>
+                <!-- CSV檔案選項將由JavaScript動態生成 -->
+            </select>
+            <button id="refreshCsvBtn" title="重新掃描CSV檔案">刷新</button>
+        </div>
+        <div class="controls">
+            <button id="prevBtn">上一代</button>
+            <span id="generationInfo">世代: 1 / 1</span>
+            <button id="nextBtn">下一代</button>
+            <div class="play-controls">
+                <button id="playBtn"><span id="playBtnText">播放</span></button>
+                <div class="speed-control">
+                    <label for="playSpeed">速度:</label>
+                    <select id="playSpeed">
+                        <option value="2000">慢</option>
+                        <option value="1000" selected>中</option>
+                        <option value="500">快</option>
+                        <option value="200">極快</option>
+                    </select>
+                </div>
+            </div>
+            <div class="value-display-control">
+                <button id="toggleValueBtn">顯示數值</button>
+            </div>
+            <div class="visualization-toggle">
+                <button id="chartViewBtn" class="active">圖表視圖</button>
+                <button id="axisViewBtn">軸線視圖</button>
+                <button id="customViewBtn">自定義比例</button>
+            </div>
+        </div>
+        <div class="visualization-container">
+            <div class="chart-container" id="chartView">
+                <canvas id="stockChart"></canvas>
+            </div>
+            <div class="axis-container" id="axisView" style="display: none;">
+                <div class="axis-line">
+                    <div class="axis-label-container">
+                        <span class="axis-label">0%</span>
+                        <span class="axis-label">25%</span>
+                        <span class="axis-label">50%</span>
+                        <span class="axis-label">75%</span>
+                        <span class="axis-label">100%</span>
+                    </div>
+                    <div class="axis-track">
+                        <div class="current-marker" id="currentMarker">
+                            <div class="marker-point"></div>
+                            <div class="marker-label">當前</div>
+                        </div>
+                        <div class="best-marker" id="bestMarker">
+                            <div class="marker-point"></div>
+                            <div class="marker-label">最佳</div>
+                        </div>
+                    </div>
+                    <div class="axis-info">
+                        <div class="stock-ratios axis-stock-ratios">
+                            <div class="stock-ratio-group current-group">
+                                <div class="group-label">當前</div>
+                                <div class="group-items">
+                                    <div class="stock-ratio-item current-ratio">
+                                        <div class="stock-name" id="currentStockName1">RY.TO</div>
+                                        <div class="stock-value" id="currentStockRatio1">0%</div>
+                                        <div class="stock-bar">
+                                            <div class="stock-bar-fill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="stock-ratio-item current-ratio-second">
+                                        <div class="stock-name" id="currentStockName2">TD.TO</div>
+                                        <div class="stock-value" id="currentStockRatio2">0%</div>
+                                        <div class="stock-bar">
+                                            <div class="stock-bar-fill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trend-ratio-display">
+                                    <span class="trend-ratio-label">TrendRatio: </span>
+                                    <span class="trend-ratio-value" id="currentTrendRatio">0.00000000</span>
+                                </div>
+                            </div>
+                            <div class="stock-ratio-group best-group">
+                                <div class="group-label">最佳</div>
+                                <div class="group-items">
+                                    <div class="stock-ratio-item best-ratio">
+                                        <div class="stock-name" id="bestStockName1">RY.TO</div>
+                                        <div class="stock-value" id="bestStockRatio1">0%</div>
+                                        <div class="stock-bar">
+                                            <div class="stock-bar-fill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                    <div class="stock-ratio-item best-ratio-second">
+                                        <div class="stock-name" id="bestStockName2">TD.TO</div>
+                                        <div class="stock-value" id="bestStockRatio2">0%</div>
+                                        <div class="stock-bar">
+                                            <div class="stock-bar-fill" style="width: 0%"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="trend-ratio-display">
+                                    <span class="trend-ratio-label">TrendRatio: </span>
+                                    <span class="trend-ratio-value" id="axisBestTrendRatio">0.00000000</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="custom-container" id="customView" style="display: none;">
+                <h3>自定義股票比例計算</h3>
+                <div class="custom-inputs" id="customStockInputs">
+                    <!-- 股票比例輸入欄位將由JavaScript動態生成 -->
+                </div>
+                <div class="custom-controls">
+                    <button id="calculateBtn">計算</button>
+                    <button id="resetCustomBtn">重置</button>
+                </div>
+                <div class="custom-results">
+                    <div class="result-item">
+                        <span class="label">TrendRatio:</span>
+                        <span id="customTrendRatio">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="label">ExpectedReturn:</span>
+                        <span id="customExpectedReturn">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="label">Risk:</span>
+                        <span id="customRisk">-</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="data-info">
+            <div class="info-item">
+                <span class="label">Stage:</span>
+                <span id="stage">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Step:</span>
+                <span id="step">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">TrendRatio:</span>
+                <span id="trendRatio">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">ExpectedReturn:</span>
+                <span id="expectedReturn">0</span>
+            </div>
+            <div class="info-item">
+                <span class="label">Risk:</span>
+                <span id="risk">0</span>
+            </div>
+        </div>
+        
+        <div class="data-info">
+            <h3>股票比例信息</h3>
+            <div class="stock-ratios" id="stockRatios">
+                <!-- 股票比例信息將由JavaScript動態生成 -->
+            </div>
+        </div>
+        
+        <div class="data-info best-trend-container">
+            <h3>目前最佳趨勢值世代</h3>
+            <div class="best-trend-info">
+                <div class="info-item">
+                    <span class="label">世代:</span>
+                    <span id="bestGeneration">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">TrendRatio:</span>
+                    <span id="bestTrendRatio">-</span>
+                </div>
+            </div>
+            <div class="stock-ratios" id="bestStockRatios">
+                <!-- 最佳世代的股票比例信息將由JavaScript動態生成 -->
+            </div>
+        </div>
+        <div class="file-input">
+            <input type="file" id="csvFile" accept=".csv">
+            <label for="csvFile">上傳CSV檔案</label>
+        </div>
+    </div>
+    <script src="script.js?v=85"></script>
+</body>
+</html>
